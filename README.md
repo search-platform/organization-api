@@ -55,3 +55,37 @@ type=PHONE/EMAIL в запросе - type CONTACT в ответе
 }
 ```
 
+### GET /api/v1/organization/{organizationId}
+#### RESPONSE:
+```
+{
+	"orgName": "Raiffizen banka",
+ 	"address": "Beograd, Kosavska 7"
+  	"orgUrl": "http",
+   	"contacts" [
+    		{
+      			"type" PHONE,
+	 		"value": "+78987987987"
+		},
+  		{
+      			"type" EMAIL,
+	 		"value": "raig@gmail.com"
+		}
+	]
+}
+```
+
+### POST /api/v1/organization/{organizationId}/contact - создание существующего контакта
+```
+{
+	"type": PHONE,
+	"value": "new value"
+}
+```
+
+### PUT /api/v1/organization/{organizationId}/contact/{contactId} - обновление существующего контакта
+```
+{
+	"value": "new value"
+}
+```
