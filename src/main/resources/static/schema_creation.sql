@@ -11,9 +11,10 @@ CREATE TABLE "organization" (
 CREATE TABLE "contact" (
                            "id" SERIAL PRIMARY KEY,
                            "type" varchar,
+                           "description" varchar,
                            "value" varchar,
                            "organization_id" bigint,
-                           "value_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', value)) STORED
+                           "value_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', "value")) STORED
 );
 
 CREATE TABLE "organization_common_vector" (
