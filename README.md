@@ -6,6 +6,7 @@ GET organization-api -> chat-api
 REQUEST:
 
 RESPONSE:
+```
 {
 	"phones": [
 		{
@@ -22,3 +23,4 @@ RESPONSE:
 	"url": http://test-bank.html
 	"address": "Serbia, Belgrade, Kosavska 7B" //оставляет строкой т.к. информация может быть вообще разной и каких-то частей (город или улица или номер дома может не быть)
 }
+```
