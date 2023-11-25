@@ -20,12 +20,13 @@ Service that manages organization entity and all related info like contacts and 
 			"value": "raif-bank@gmail.com"
 		}
 	]
-	"url": http://test-bank.html
+	"url": http://test-bank.html,
+	"country" "Serbia",
 	"logoLink": 
 	"address": "Serbia, Belgrade, Kosavska 7B" //оставляет строкой т.к. информация может быть вообще разной и каких-то частей (город или улица или номер дома может не быть)
 }
 ```
-### GET /api/v1/search?type=ALL
+### GET /api/v1/search?country=Serbia&type=ALL
 #### REQUEST:
 ```
 {
@@ -36,7 +37,9 @@ Service that manages organization entity and all related info like contacts and 
 type=ALL/ORGANIZATION в запросе - type ORGANIZATION в ответе
 ```
 {
-	"type": ORGANIZATION
+	"type": ORGANIZATION,
+	"countryId": 123;
+	"countryName": "Serbia",
  	"orgId": 123;
 	"orgName": "Raiffizen Beograd",
 	"orgLogoUrl": 
@@ -46,7 +49,9 @@ type=ALL/ORGANIZATION в запросе - type ORGANIZATION в ответе
 type=PHONE/EMAIL в запросе - type CONTACT в ответе
 ```
 {
-	"type": CONTACT
+	"type": CONTACT,
+	"countryId": 123;
+	"countryName": "Serbia",
 	"orgId": 123;
  	"orgName": "Raiffizen Beograd",
   	"orgLogoUrl": 
@@ -59,6 +64,9 @@ type=PHONE/EMAIL в запросе - type CONTACT в ответе
 #### RESPONSE:
 ```
 {
+	"countryId": 123,
+	"countryName": "Serbia",
+	"orgId": 123,
 	"orgName": "Raiffizen banka",
  	"address": "Beograd, Kosavska 7"
   	"orgUrl": "http",
