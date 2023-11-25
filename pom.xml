@@ -14,7 +14,7 @@
 	<name>organization-api</name>
 	<description>API for organization CRUD and searching</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>20</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
