@@ -1,7 +1,7 @@
 # organization-api
 Service that manages organization entity and all related info like contacts and comments. Service can persist data and perform advanced searching
 
-
+## API contracts
 ### GET organization-api -> chat-api
 #### REQUEST:
 
@@ -89,3 +89,6 @@ type=PHONE/EMAIL в запросе - type CONTACT в ответе
 	"value": "new value"
 }
 ```
+
+## DB schema
+https://dbdiagram.io/d/search-platform-65620c5d3be1495787b7f4de
