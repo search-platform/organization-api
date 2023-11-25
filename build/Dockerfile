@@ -1,5 +1,5 @@
 # Этап 1: Сборка приложения
-FROM maven:3.8.4-openjdk-17-slim AS build
+FROM maven:3.9.5-amazoncorretto-21-debian AS build
 WORKDIR /app
 COPY pom.xml .
 # Скачивание зависимостей
