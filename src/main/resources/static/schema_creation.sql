@@ -1,3 +1,8 @@
+CREATE TABLE "country" (
+                           "id" SERIAL PRIMARY KEY,
+                           "name" varchar
+);
+
 CREATE TABLE "organization" (
                                 "id" SERIAL PRIMARY KEY,
                                 "type" varchar,
@@ -5,7 +10,8 @@ CREATE TABLE "organization" (
                                 "address" varchar,
                                 "logoUrl" varchar,
                                 "name_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', name)) STORED,
-                                "address_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', address)) STORED
+                                "address_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', address)) STORED,
+                                "county_id" bigint
 );
 
 CREATE TABLE "contact" (
@@ -18,10 +24,10 @@ CREATE TABLE "contact" (
 );
 
 CREATE TABLE "organization_common_vector" (
-                                              "organization_id" bigint,
-                                              "search_vector" tsvector
+                                            "organization_id" bigint,
+                                            "search_vector" tsvector
 );
 
+ALTER TABLE "organization" ADD FOREIGN KEY ("county_id") REFERENCES "country" ("id");
 ALTER TABLE "contact" ADD FOREIGN KEY ("organization_id") REFERENCES "organization" ("id");
-
 ALTER TABLE "organization_common_vector" ADD FOREIGN KEY ("organization_id") REFERENCES "organization" ("id");
