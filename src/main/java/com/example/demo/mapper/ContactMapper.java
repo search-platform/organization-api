@@ -1,5 +1,7 @@
 package com.example.demo.mapper;
 
+import com.example.demo.dto.ContactCreationRqDto;
+import com.example.demo.dto.ContactUpdationRqDto;
 import com.example.demo.dto.SearchResponseDto;
 import com.example.demo.dto.SearchResponseType;
 import com.example.demo.entity.Contact;
@@ -29,6 +31,10 @@ public interface ContactMapper {
     SearchResponseDto contactToSearchResponseDto(Contact contact);
 
     List<SearchResponseDto> contactsToSearchResponseDtos(List<Contact> contacts);
+
+    Contact fromCreatingDto(ContactCreationRqDto contactCreationRqDto);
+
+    Contact fromUpdatingDto(ContactUpdationRqDto contactUpdatingRqDto);
 
     @Named("stringToSearchResponseType")
     default SearchResponseType stringToSearchResponseType(String type) {
