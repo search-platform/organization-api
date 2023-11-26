@@ -25,7 +25,10 @@ public interface OrganizationMapper {
         @Mapping(source = "name", target = "orgName"),
         @Mapping(source = "logoUrl", target = "orgLogoUrl"),
         @Mapping(source = "country.id", target = "countryId"),
-        @Mapping(source = "country.name", target = "countryName")
+        @Mapping(source = "country.name", target = "countryName"),
+            @Mapping(source = "url", target = "orgUrl"),
+            @Mapping(source = "favicon", target = "orgFavicon"),
+            @Mapping(source = "address", target = "orgAddress")
     })
     SearchResponseDto organizationToSearchResponseDto(Organization organization);
 

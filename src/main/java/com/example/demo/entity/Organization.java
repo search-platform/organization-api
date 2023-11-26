@@ -34,8 +34,14 @@ public class Organization {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "url")
+    private String url;
+
     @Column(name = "logo_url")
     private String logoUrl;
+
+    @Column(name = "fav_icon")
+    private String favicon;
 
     @ManyToOne
     @JoinColumn(name = "county_id")

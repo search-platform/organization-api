@@ -32,6 +32,7 @@ public class SearchRestController {
                                                           @RequestParam(name = "query") String query) {
 
         if (type == SearchType.ALL) {
+            System.out.println("GET: /api/v1/search chosed");
             throw new RuntimeException("Not implemented FTS");
         } else if (type == SearchType.ORGANIZATION) {
             return ResponseEntity.ok(searchService.findByOrganizationName(query));

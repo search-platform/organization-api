@@ -16,7 +16,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     // Find organizations by country
     List<Organization> findByCountryId(Long countryId);
 
-    @Query(value = "SELECT o.id, o.type, o.name, o.address, o.county_id, o.logo_url as logo_url FROM organization o JOIN country c ON o.county_id = c.id WHERE o.name ILIKE :query", nativeQuery = true)
+    @Query(value = "SELECT o.id, o.type, o.name, o.address, o.county_id, o.logo_url as logo_url, o.fav_icon, o.url FROM organization o JOIN country c ON o.county_id = c.id WHERE o.name ILIKE :query", nativeQuery = true)
     List<Organization> findFuzzyByNameAndCountry(@Param("query") String query);
 
     // You can add more custom methods here as needed

@@ -75,10 +75,4 @@ public class SecurityService {
             return false;
         }
     }
-
-    public static boolean isDifferenceWithin(Date date1, Date date2, TimeUnit timeUnit, long amount) {
-        long diffInMillis = Math.abs(date1.getTime() - date2.getTime());
-        long diffInTimeUnit = timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
-        return diffInTimeUnit <= amount;
-    }
 }

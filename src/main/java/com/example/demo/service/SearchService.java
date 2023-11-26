@@ -53,7 +53,8 @@ public class SearchService {
         return jdbcTemplate.query(
                 sql,
                 new Object[]{"%"+query+"%"},
-                (rs, rowNum) -> new SearchResponseDto(SearchResponseType.CONTACT,
+                (rs, rowNum) -> new SearchResponseDto(
+                        SearchResponseType.CONTACT,
                         rs.getLong("country_id"),
                         rs.getString("country_name"),
                         rs.getLong("org_id"),
@@ -67,7 +68,7 @@ public class SearchService {
 
     public List<SearchResponseDto> findByEmailValue(String query) {
         String sql = "SELECT con.id as contact_id, con.value as contact_value,\n" +
-                "       c.id as country_id, c.name as country_name, o.id as org_id, o.name as org_name, o.\"logoUrl\" as org_logo_url\n" +
+                "       c.id as country_id, c.name as country_name, o.id as org_id, o.name as org_name, o.logo_url as org_logo_url, o.fav_icon as fav_icon, o.url as url, o.address as address\n" +
                 " FROM contact con JOIN organization o on o.id = con.organization_id JOIN country c on c.id = o.county_id\n" +
                 "WHERE con.type='EMAIL' and con.value ILIKE ?";
         return jdbcTemplate.query(
@@ -80,7 +81,10 @@ public class SearchService {
                         rs.getString("org_name"),
                         rs.getString("org_logo_url"),
                         rs.getLong("contact_id"),
-                        rs.getString("contact_value")
+                        rs.getString("contact_value"),
+                        rs.getString("fav_icon"),
+                        rs.getString("url"),
+                        rs.getString("address")
                         )
         );
     }
