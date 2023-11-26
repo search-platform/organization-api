@@ -9,5 +9,5 @@ public class CompanyRequestGptDto {
 
     private String country;
 
-    private String query;
+    private String name;
 }

@@ -10,14 +10,15 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class GptServiceClient {
 
-    @Value("${GPT_SERVICE_URL}")
-    private String gptServiceUrl;
+//    @Value("${GPT_SERVICE_URL}")
+    private String gptServiceUrl = "http://203.161.56.22:8086/gpt/find";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     public OrganizationResponseGptDto findByQuery(CompanyRequestGptDto companyRequestGptDto) {
         HttpEntity<CompanyRequestGptDto> request = new HttpEntity<>(companyRequestGptDto);
-        return restTemplate.postForEntity(gptServiceUrl, request, OrganizationResponseGptDto.class).getBody();
+        var result = restTemplate.postForEntity(gptServiceUrl, request, OrganizationResponseGptDto.class).getBody();
+        return result;
 //        var contactDto = ContactResponseGptDto.builder()
 //                .type(ContactType.EMAIL)
 //                .description("sales department")

@@ -87,7 +87,7 @@ public class SearchService {
 
     @Transactional
     public Organization findInGptAndSave(String country, String query) {
-        OrganizationResponseGptDto companyResponseGptDto = gptServiceClient.findByQuery(CompanyRequestGptDto.builder().country(country).query(query).build());
+        OrganizationResponseGptDto companyResponseGptDto = gptServiceClient.findByQuery(CompanyRequestGptDto.builder().country(country).name(query).build());
         Country countryFromDb = countryRepository.findByName(companyResponseGptDto.getCountry());
         Organization organization = organizationMapper.fromOrganizationGptDto(companyResponseGptDto);
         organization.setName(companyResponseGptDto.getName());

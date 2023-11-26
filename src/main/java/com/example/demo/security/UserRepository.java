@@ -3,6 +3,7 @@ package com.example.demo.security;
 import com.example.demo.dto.SearchResponseDto;
 import com.example.demo.dto.SearchResponseType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,16 @@ public class UserRepository {
 
     public String getEncodedPasswordByLogin(String login) {
         String sql = "SELECT u.password as user_password FROM \"user\" u WHERE u.login = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                new Object[]{login},
-                (rs, rowNum) -> rs.getString("user_password")
-        );
+        String response = null;
+        try {
+            response = jdbcTemplate.queryForObject(
+                    sql,
+                    new Object[]{login},
+                    (rs, rowNum) -> rs.getString("user_password")
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return response;
     }
 }

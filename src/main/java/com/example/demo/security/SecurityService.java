@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.example.demo.exception.AuthException;
 import com.example.demo.security.dto.UserDto;
 import com.example.demo.security.encoder.Sha256PasswordEncoder;
 import io.jsonwebtoken.Claims;
@@ -25,6 +26,9 @@ public class SecurityService {
 
     public boolean isUserCredValid(String login, String rawPassword) {
         var storedPassword = userRepository.getEncodedPasswordByLogin(login);
+        if (storedPassword == null) {
+            return false;
+        }
         var encryptedRequestPassword = passwordEncoder.encodePassword(rawPassword);
         return storedPassword.equals(encryptedRequestPassword);
     }
@@ -32,6 +36,9 @@ public class SecurityService {
     public String issueToken(String login) {
 
         var storedPassword = userRepository.getEncodedPasswordByLogin(login);
+        if (storedPassword == null) {
+            throw new AuthException("UserRepository returned null");
+        }
         var userPasswordToken = login + " " + storedPassword;
 
         long expirationTimeMillis = System.currentTimeMillis() + 3600000;
@@ -58,6 +65,10 @@ public class SecurityService {
             String login = splitedSubject[0];
             String requestedPassword = splitedSubject[1];
             var storedPassword = userRepository.getEncodedPasswordByLogin(login);
+
+            if (storedPassword == null) {
+                return false;
+            }
 
             return storedPassword.equals(requestedPassword);
         } catch (Exception e) {
