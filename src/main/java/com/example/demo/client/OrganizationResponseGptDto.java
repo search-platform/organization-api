@@ -17,4 +17,6 @@ public class OrganizationResponseGptDto {
     private String logoLink;
 
     private String address;
+
+    private String name;
 }

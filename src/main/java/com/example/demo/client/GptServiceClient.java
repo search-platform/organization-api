@@ -16,19 +16,20 @@ public class GptServiceClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public OrganizationResponseGptDto findByQuery(CompanyRequestGptDto companyRequestGptDto) {
-//        HttpEntity<CompanyRequestGptDto> request = new HttpEntity<>(companyRequestGptDto);
-//        return restTemplate.postForEntity(gptServiceUrl, request, OrganizationResponseGptDto.class).getBody();
-        var contactDto = ContactResponseGptDto.builder()
-                .type(ContactType.EMAIL)
-                .description("sales department")
-                .description("email@gmail.com")
-                .build();
-        return OrganizationResponseGptDto.builder()
-                .contacts(Arrays.asList(contactDto))
-                .url("http")
-                .logoLink("http")
-                .address("Address")
-                .country("Serbia")
-                .build();
+        HttpEntity<CompanyRequestGptDto> request = new HttpEntity<>(companyRequestGptDto);
+        return restTemplate.postForEntity(gptServiceUrl, request, OrganizationResponseGptDto.class).getBody();
+//        var contactDto = ContactResponseGptDto.builder()
+//                .type(ContactType.EMAIL)
+//                .description("sales department")
+//                .value("email@gmail.com")
+//                .build();
+//        return OrganizationResponseGptDto.builder()
+//                .contacts(Arrays.asList(contactDto))
+//                .url("http")
+//                .logoLink("http")
+//                .address("Address")
+//                .country("Serbia")
+//                .name("Raif")
+//                .build();
     }
 }

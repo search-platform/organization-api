@@ -28,6 +28,8 @@ public class SearchService {
 
     private final CountryRepository countryRepository;
 
+    private final ContactRepository contactRepository;
+
     public static OrganizationMapper organizationMapper = Mappers.getMapper(OrganizationMapper.class);
 
     public static ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
@@ -88,6 +90,9 @@ public class SearchService {
         OrganizationResponseGptDto companyResponseGptDto = gptServiceClient.findByQuery(CompanyRequestGptDto.builder().country(country).query(query).build());
         Country countryFromDb = countryRepository.findByName(companyResponseGptDto.getCountry());
         Organization organization = organizationMapper.fromOrganizationGptDto(companyResponseGptDto);
+        organization.setName(companyResponseGptDto.getName());
+        organization.setCountry(countryFromDb);
+        organization.setLogoUrl(companyResponseGptDto.getUrl());
 
         List<Contact> contactList = contactMapper.fromGptDto(companyResponseGptDto.getContacts());
 
@@ -97,6 +102,14 @@ public class SearchService {
             contact.setOrganization(savedOrganization);
         }
 
-        return savedOrganization;
+        contactRepository.saveAll(contactList);
+        organization.setOrders(contactList);
+
+//        var response = organizationMapper.organizationToSearchResponseDto(organization);
+//        response.setCountryId(countryFromDb.getId());
+//        response.setCountryName(countryFromDb.getName());
+//        response.setOrgName(organization.getName());
+//        response.setOrgLogoUrl(organization.getLogoUrl());
+        return organizationRepository.findById(savedOrganization.getId()).get();
     }
 }
