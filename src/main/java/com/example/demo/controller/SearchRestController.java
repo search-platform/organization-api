@@ -1,20 +1,17 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.SearchRequestDto;
+import com.example.demo.client.CompanyRequestGptDto;
+import com.example.demo.client.OrganizationResponseGptDto;
+import com.example.demo.client.GptServiceClient;
 import com.example.demo.dto.SearchResponseDto;
-import com.example.demo.dto.SearchResponseType;
 import com.example.demo.dto.SearchType;
 import com.example.demo.mapper.OrganizationMapper;
-import com.example.demo.repository.OrganizationRepository;
 import com.example.demo.service.SearchService;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchRestController {
 
     private final SearchService searchService;
+
+    public static OrganizationMapper organizationMapper = Mappers.getMapper(OrganizationMapper.class);
+
 
     @GetMapping
     public ResponseEntity<List<SearchResponseDto>> search(@RequestParam(name = "type") SearchType type,
@@ -39,9 +39,13 @@ public class SearchRestController {
         } else if (type == SearchType.PHONE) {
             return ResponseEntity.ok(searchService.findByPhoneValue(query));
         }
-
         return ResponseEntity.ok(null);
     }
 
-    // Inner class to map the request body
+    @GetMapping("/gpt")
+    public ResponseEntity<SearchResponseDto> search(@RequestParam(name = "country") String country,
+                                                          @RequestParam(name = "query") String query) {
+
+        return ResponseEntity.ok(organizationMapper.organizationToSearchResponseDto(searchService.findInGptAndSave(country, query)));
+    }
 }

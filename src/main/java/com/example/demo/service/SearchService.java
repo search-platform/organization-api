@@ -1,16 +1,24 @@
 package com.example.demo.service;
 
+import com.example.demo.client.CompanyRequestGptDto;
+import com.example.demo.client.GptServiceClient;
+import com.example.demo.client.OrganizationResponseGptDto;
 import com.example.demo.dto.SearchResponseDto;
 import com.example.demo.dto.SearchResponseType;
+import com.example.demo.entity.Contact;
+import com.example.demo.entity.Country;
+import com.example.demo.entity.Organization;
 import com.example.demo.mapper.ContactMapper;
 import com.example.demo.mapper.OrganizationMapper;
 import com.example.demo.repository.ContactRepository;
+import com.example.demo.repository.CountryRepository;
 import com.example.demo.repository.OrganizationRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +26,15 @@ public class SearchService {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final CountryRepository countryRepository;
+
     public static OrganizationMapper organizationMapper = Mappers.getMapper(OrganizationMapper.class);
 
     public static ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
 
     private final OrganizationRepository organizationRepository;
 
-    private final ContactRepository contactRepository;
+    private final GptServiceClient gptServiceClient;
 
     public List<SearchResponseDto> findByOrganizationName(String query) {
         var entityResiltList = organizationRepository.findFuzzyByNameAndCountry("%"+query+"%");
@@ -73,5 +83,20 @@ public class SearchService {
         );
     }
 
+    @Transactional
+    public Organization findInGptAndSave(String country, String query) {
+        OrganizationResponseGptDto companyResponseGptDto = gptServiceClient.findByQuery(CompanyRequestGptDto.builder().country(country).query(query).build());
+        Country countryFromDb = countryRepository.findByName(companyResponseGptDto.getCountry());
+        Organization organization = organizationMapper.fromOrganizationGptDto(companyResponseGptDto);
 
+        List<Contact> contactList = contactMapper.fromGptDto(companyResponseGptDto.getContacts());
+
+        var savedOrganization = organizationRepository.save(organization);
+
+        for (Contact contact : contactList) {
+            contact.setOrganization(savedOrganization);
+        }
+
+        return savedOrganization;
+    }
 }
