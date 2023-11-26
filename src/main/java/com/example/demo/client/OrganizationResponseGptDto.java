@@ -8,15 +8,18 @@ import lombok.Data;
 @Builder
 public class OrganizationResponseGptDto {
 
-    private List<ContactResponseGptDto> contacts;
-
     private String url;
+
+    private String name;
 
     private String country;
 
     private String logoLink;
 
+    private String faviconLink;
+
     private String address;
 
-    private String name;
+    private List<ContactResponseGptDto> contacts;
+
 }

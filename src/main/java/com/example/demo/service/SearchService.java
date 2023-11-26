@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.client.CompanyRequestGptDto;
+import com.example.demo.client.ContactResponseGptDto;
 import com.example.demo.client.GptServiceClient;
 import com.example.demo.client.OrganizationResponseGptDto;
 import com.example.demo.dto.SearchResponseDto;
@@ -8,6 +9,7 @@ import com.example.demo.dto.SearchResponseType;
 import com.example.demo.entity.Contact;
 import com.example.demo.entity.Country;
 import com.example.demo.entity.Organization;
+import com.example.demo.exception.GptResponseException;
 import com.example.demo.mapper.ContactMapper;
 import com.example.demo.mapper.OrganizationMapper;
 import com.example.demo.repository.ContactRepository;
@@ -92,13 +94,17 @@ public class SearchService {
     @Transactional
     public Organization findInGptAndSave(String country, String query) {
         OrganizationResponseGptDto companyResponseGptDto = gptServiceClient.findByQuery(CompanyRequestGptDto.builder().country(country).name(query).build());
+        if (isResponseValid(companyResponseGptDto)) {
+            throw new GptResponseException("The response include null fields on required fields");
+        }
         Country countryFromDb = countryRepository.findByName(companyResponseGptDto.getCountry());
         Organization organization = organizationMapper.fromOrganizationGptDto(companyResponseGptDto);
         organization.setName(companyResponseGptDto.getName());
         organization.setCountry(countryFromDb);
         organization.setLogoUrl(companyResponseGptDto.getUrl());
+        organization.setFavicon(companyResponseGptDto.getFaviconLink());
 
-        List<Contact> contactList = contactMapper.fromGptDto(companyResponseGptDto.getContacts());
+        List<Contact> contactList = getContactListRemoveEmpty(companyResponseGptDto.getContacts());
 
         var savedOrganization = organizationRepository.save(organization);
 
@@ -109,11 +115,27 @@ public class SearchService {
         contactRepository.saveAll(contactList);
         organization.setOrders(contactList);
 
-//        var response = organizationMapper.organizationToSearchResponseDto(organization);
-//        response.setCountryId(countryFromDb.getId());
-//        response.setCountryName(countryFromDb.getName());
-//        response.setOrgName(organization.getName());
-//        response.setOrgLogoUrl(organization.getLogoUrl());
         return organizationRepository.findById(savedOrganization.getId()).get();
+    }
+
+    private List<Contact> getContactListRemoveEmpty(List<ContactResponseGptDto> contacts) {
+        List<Contact> contactsList = contactMapper.fromGptDto(contacts);
+        return contactsList.stream().filter(c -> c.getValue() != null).toList();
+    }
+
+    private boolean isResponseValid(OrganizationResponseGptDto dto) {
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            return false;
+        }
+        if (dto.getFaviconLink() == null || dto.getFaviconLink().isBlank()) {
+            return false;
+        }
+        if (dto.getLogoLink() == null || dto.getLogoLink().isBlank()) {
+            return false;
+        }
+        if(dto.getCountry() == null || dto.getLogoLink().isBlank()) {
+            return false;
+        }
+        return dto.getUrl() != null && !dto.getUrl().isBlank();
     }
 }

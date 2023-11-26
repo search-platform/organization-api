@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.client.CompanyRequestGptDto;
-import com.example.demo.client.OrganizationResponseGptDto;
-import com.example.demo.client.GptServiceClient;
+
+import com.example.demo.dto.GptErrorResponse;
 import com.example.demo.dto.SearchResponseDto;
 import com.example.demo.dto.SearchType;
 import com.example.demo.entity.Organization;
+import com.example.demo.exception.GptResponseException;
 import com.example.demo.mapper.OrganizationMapper;
 import com.example.demo.service.SearchService;
 import java.util.List;
@@ -45,9 +45,16 @@ public class SearchRestController {
     }
 
     @GetMapping("/gpt")
-    public ResponseEntity<Organization> search(@RequestParam(name = "country") String country,
+    public ResponseEntity<?> search(@RequestParam(name = "country") String country,
                                                @RequestParam(name = "query") String query) {
 
-        return ResponseEntity.ok(searchService.findInGptAndSave(country, query));
+        Organization response = null;
+
+        try {
+            response = searchService.findInGptAndSave(country, query);
+        } catch (GptResponseException e) {
+            return ResponseEntity.ok(GptErrorResponse.builder().error("NotFound").build());
+        }
+        return ResponseEntity.ok(response);
     }
 }
