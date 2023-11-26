@@ -1,3 +1,9 @@
+CREATE TABLE "user" (
+    "id" SERIAL PRIMARY KEY,
+    "login" varchar,
+    "password" varchar
+);
+
 CREATE TABLE "country" (
                            "id" SERIAL PRIMARY KEY,
                            "name" varchar
