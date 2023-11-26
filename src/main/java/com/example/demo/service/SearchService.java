@@ -104,7 +104,7 @@ public class SearchService {
         Organization organization = organizationMapper.fromOrganizationGptDto(companyResponseGptDto);
         organization.setName(companyResponseGptDto.getName());
         organization.setCountry(countryFromDb);
-        organization.setLogoUrl(companyResponseGptDto.getUrl());
+        organization.setLogoUrl(companyResponseGptDto.getLogoLink());
         organization.setFavicon(companyResponseGptDto.getFaviconLink());
 
         List<Contact> contactList = getContactListRemoveEmpty(companyResponseGptDto.getContacts());
