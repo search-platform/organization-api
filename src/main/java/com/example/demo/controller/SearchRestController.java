@@ -28,16 +28,16 @@ public class SearchRestController {
 
     @GetMapping
     public ResponseEntity<List<SearchResponseDto>> search(@RequestParam(name = "type") SearchType type,
-                                                          @RequestBody SearchRequestDto searchRequest) {
+                                                          @RequestParam(name = "query") String query) {
 
         if (type == SearchType.ALL) {
             throw new RuntimeException("Not implemented FTS");
         } else if (type == SearchType.ORGANIZATION) {
-            return ResponseEntity.ok(searchService.findByOrganizationName(searchRequest.getQuery()));
+            return ResponseEntity.ok(searchService.findByOrganizationName(query));
         } else if (type == SearchType.EMAIL) {
-            return ResponseEntity.ok(searchService.findByEmailValue(searchRequest.getQuery()));
+            return ResponseEntity.ok(searchService.findByEmailValue(query));
         } else if (type == SearchType.PHONE) {
-            return ResponseEntity.ok(searchService.findByPhoneValue(searchRequest.getQuery()));
+            return ResponseEntity.ok(searchService.findByPhoneValue(query));
         }
 
         return ResponseEntity.ok(null);
