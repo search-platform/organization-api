@@ -51,8 +51,11 @@ public class ContactController {
 
     // Update a contact
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContact(@PathVariable Long id, @RequestBody ContactUpdationRqDto contactDto) {
-        contactRepository.save(contactMapper.fromUpdatingDto(contactDto));
+    public ResponseEntity<Contact> updateContact(@PathVariable Long id, @PathVariable Long organizationId, @RequestBody ContactUpdationRqDto contactDto) {
+        var organization = organizationRepository.findById(organizationId).get();
+        var contactEntity = contactMapper.fromUpdatingDto(contactDto);
+        contactEntity.setOrganization(organization);
+        contactRepository.save(contactEntity);
         return ResponseEntity.ok(contactRepository.findById(id).get());
     }
 
