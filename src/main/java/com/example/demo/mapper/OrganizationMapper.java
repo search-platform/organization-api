@@ -1,8 +1,9 @@
 package com.example.demo.mapper;
 
+import com.example.demo.client.OrganizationResponseGptDto;
 import com.example.demo.dto.SearchResponseDto;
 import com.example.demo.dto.SearchResponseType;
-import com.example.demo.dto.SearchType;
+import com.example.demo.entity.Country;
 import com.example.demo.entity.Organization;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -30,8 +31,18 @@ public interface OrganizationMapper {
 
     List<SearchResponseDto> organizationsToSearchResponseDtos(List<Organization> organizations);
 
+    @Mappings({
+            @Mapping(source = "country", target = "country", qualifiedByName = "contryToCountry")
+    })
+    Organization fromOrganizationGptDto(OrganizationResponseGptDto organizationGptDto);
+
     @Named("stringToSearchType")
     default SearchResponseType stringToSearchType(String type) {
         return SearchResponseType.ORGANIZATION;
+    }
+
+    @Named("contryToCountry")
+    default Country contryToCountry(String country) {
+        return null;
     }
 }
