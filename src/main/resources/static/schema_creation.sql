@@ -8,7 +8,7 @@ CREATE TABLE "organization" (
                                 "type" varchar,
                                 "name" varchar,
                                 "address" varchar,
-                                "logoUrl" varchar,
+                                "logo_url" varchar,
                                 "name_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', name)) STORED,
                                 "address_vector_eng" tsvector GENERATED ALWAYS AS (to_tsvector('english', address)) STORED,
                                 "county_id" bigint

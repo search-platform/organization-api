@@ -31,7 +31,7 @@ public class Organization {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "logoUrl")
+    @Column(name = "logo_url")
     private String logoUrl;
 
     @ManyToOne
