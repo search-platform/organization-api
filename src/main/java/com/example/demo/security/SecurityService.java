@@ -53,29 +53,27 @@ public class SecurityService {
 
     public boolean isTokenValid(String token) {
 
-        return true;
+        try {
+            Jws<Claims> claimsJws = Jwts.parser()
+                    .setSigningKey(accessJwtSecret)
+                    .parseClaimsJws(token);
 
-//        try {
-//            Jws<Claims> claimsJws = Jwts.parser()
-//                    .setSigningKey(accessJwtSecret)
-//                    .parseClaimsJws(token);
-//
-//            // Successfully parsed and verified the JWT
-//            Claims claims = claimsJws.getBody();
-//            String subject = claims.getSubject();
-//            String[] splitedSubject = subject.split(" ");
-//            String login = splitedSubject[0];
-//            String requestedPassword = splitedSubject[1];
-//            var storedPassword = userRepository.getEncodedPasswordByLogin(login);
-//
-//            if (storedPassword == null) {
-//                return false;
-//            }
-//
-//            return storedPassword.equals(requestedPassword);
-//        } catch (Exception e) {
-//            return false;
-//        }
+            // Successfully parsed and verified the JWT
+            Claims claims = claimsJws.getBody();
+            String subject = claims.getSubject();
+            String[] splitedSubject = subject.split(" ");
+            String login = splitedSubject[0];
+            String requestedPassword = splitedSubject[1];
+            var storedPassword = userRepository.getEncodedPasswordByLogin(login);
+
+            if (storedPassword == null) {
+                return false;
+            }
+
+            return storedPassword.equals(requestedPassword);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static boolean isDifferenceWithin(Date date1, Date date2, TimeUnit timeUnit, long amount) {
