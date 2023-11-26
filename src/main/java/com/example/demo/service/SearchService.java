@@ -94,7 +94,10 @@ public class SearchService {
     @Transactional
     public Organization findInGptAndSave(String country, String query) {
         OrganizationResponseGptDto companyResponseGptDto = gptServiceClient.findByQuery(CompanyRequestGptDto.builder().country(country).name(query).build());
-        if (isResponseValid(companyResponseGptDto)) {
+        if (companyResponseGptDto.getName() == null || companyResponseGptDto.getName().isBlank()) {
+            companyResponseGptDto.setName(query);
+        }
+        if (!isResponseValid(companyResponseGptDto)) {
             throw new GptResponseException("The response include null fields on required fields");
         }
         Country countryFromDb = countryRepository.findByName(companyResponseGptDto.getCountry());
@@ -124,9 +127,6 @@ public class SearchService {
     }
 
     private boolean isResponseValid(OrganizationResponseGptDto dto) {
-        if (dto.getName() == null || dto.getName().isBlank()) {
-            return false;
-        }
         if (dto.getFaviconLink() == null || dto.getFaviconLink().isBlank()) {
             return false;
         }
